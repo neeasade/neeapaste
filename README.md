@@ -45,14 +45,14 @@ pass(optional)			| password for user making post request. | no
 ### Database layout
 User table:
 username | password(hashed) | id
--|-|-
+-----|-----|-----
 
 Paste table:
 title | content | views | id
--|-|-|-
+-----|-----|-----|-----
 
 
 Relation table:
 user id(foreign key) | paste id(foreign key)
--|-
+-----|-----
 
