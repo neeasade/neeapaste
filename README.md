@@ -33,18 +33,18 @@ pass(optional)			| password for user making post request. | no
 
 ###database layout
 User table
-    - Username
-    - hashed password
-    - id
+- Username
+- hashed password
+- id
 
 Paste table
-    - title
-    - content
-    - views
-    - id
+- title
+- content
+- views
+- id
 
 Relation table
-    - map foreign keys(user id to paste id)
+- map foreign keys(user id to paste id)
 
 
 
