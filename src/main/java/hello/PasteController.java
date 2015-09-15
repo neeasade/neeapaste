@@ -44,7 +44,7 @@ public class PasteController {
                     List<Paste> lReturn = new ArrayList<Paste>();
                     for(Paste lPaste : mPastes) {
                         // Search both content and title
-                        if ( (lPaste.getContent() + lPaste.getTitle()).contains(aSearchQuery)) {
+                        if ( (lPaste.getContent() + lPaste.getTitle()).toLowerCase().contains(aSearchQuery.toLowerCase())) {
                             lReturn.add(lPaste);
                         }
                     }
