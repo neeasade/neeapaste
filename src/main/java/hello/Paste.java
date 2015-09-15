@@ -22,7 +22,7 @@ public class Paste {
 
     public long getViews()
     {
-        return ++mViews;
+        return mViews;
     }
 
     public long getId()
@@ -32,6 +32,7 @@ public class Paste {
 
     public String getContent()
     {
+        mViews++;
         return mContent;
     }
 
