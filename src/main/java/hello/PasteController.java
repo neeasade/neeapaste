@@ -60,8 +60,7 @@ public class PasteController {
      * @return the Paste object associated with the ID
      */
     @RequestMapping("/paste/{id}")
-    public Paste getPaste(@PathVariable(value="id") String aId,
-                           @RequestParam(value = "query", defaultValue = "") String aSearchQuery) {
+    public Paste getPaste(@PathVariable(value="id") String aId) {
         // validate id
         int lIndex = Integer.parseInt(aId);
         if(lIndex < 0 || lIndex > mPastes.size()-1)
@@ -75,10 +74,30 @@ public class PasteController {
     }
 
     /**
+     * Get the value of a paste property
+     * @param aId The ID of the paste to get the property from
+     * @param aProperty The property to get
+     * @return the String value of the property
+     */
+    @RequestMapping("/paste/{id}/{property}")
+    public String getPaste(@PathVariable(value="id") String aId,
+                          @PathVariable(value="property") String aProperty) {
+        Paste lPaste = mPastes.get(Integer.parseInt(aId));
+        switch (aProperty.toLowerCase())
+        {
+            case "id": return Long.toString(lPaste.getId()); // Pretty silly. :P
+            case "title": return lPaste.getTitle();
+            case "views": return Long.toString(lPaste.getViews());
+            case "content": return lPaste.getContent();
+            default: return "Property not found.";
+        }
+    }
+
+    /**
      * return all pastes loaded
      * @return list of all pastes
      */
-    @RequestMapping("/pastes/all")
+    @RequestMapping("/paste/all")
     public List<Paste> allPastes()
     {
         return mPastes;
