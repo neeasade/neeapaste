@@ -26,8 +26,25 @@ GET		| result |	status
 
 POST to /paste params	| expected | status
 ------------------------|----------|----
-title					| title of a paste. | yes
-content					| content of a paste. | yes
+title(default 'Untitled')   | title of a paste. | yes
+content(default 'none') | content of a paste. | yes
 user(optional)			| user who owns the paste | no
 pass(optional)			| password for user making post request. | no
+
+###database layout
+User table
+    - Username
+    - hashed password
+    - id
+
+Paste table
+    - title
+    - content
+    - views
+    - id
+
+Relation table
+    - map foreign keys(user id to paste id)
+
+
 
