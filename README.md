@@ -6,9 +6,11 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 
 ### TODO
 - [x] allow pastes
+- [x] database persistence
 - [ ] allow users
 - [ ] allow pastes to be owned by users
 - [ ] https/SSL
+- [ ] continuous integration
 
 Reference API below for status there.
 
