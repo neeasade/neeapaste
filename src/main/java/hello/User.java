@@ -1,15 +1,16 @@
 package hello;
 
 import java.util.List;
+import org.springframework.jdbc.*;
 
 /**
- * Created by neeasade on 9/15/15.
+ * Class to represent a User.
  */
 public class User {
 
     private String mUsername;
     private String mPassword;
-    private List<Paste> aOwnedPastes;
+    private List<Long> aOwnedPastes;
 
     /**
      * Create a new user

@@ -47,17 +47,17 @@ pass(optional)			| password for user making post request. | no
 ### Database layout
 table 'paste_users':
 
-username | password(hashed) | id
+id | username | password(hashed)
 ------|-----|-----
 
 table 'pastes':
 
-title | content | views | id
+id    |title| content | views
 ------|-----|-----|-----
 
 
 table 'paste_relates':
 
-user id(foreign key) | paste id(foreign key)
+paste id(foreign key) | user id(foreign key)
 ------|-----
 

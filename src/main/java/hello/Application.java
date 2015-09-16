@@ -9,12 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
 
     @Override
     public void run(String... strings) throws Exception {
@@ -23,7 +24,6 @@ public class Application implements CommandLineRunner {
         jdbcTemplate.execute("DROP TABLE pastes IF EXISTS");
         jdbcTemplate.execute("DROP TABLE paste_users IF EXISTS");
         jdbcTemplate.execute("DROP TABLE paste_relates IF EXISTS");
-
 
         // Create the tables we will be using
         // Notes:

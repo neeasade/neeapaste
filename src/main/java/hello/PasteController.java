@@ -1,10 +1,13 @@
 package hello;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -17,6 +20,10 @@ public class PasteController {
     private final AtomicLong counter = new AtomicLong();
     //Manage a list of pastes:
     private List<Paste> mPastes;
+
+    @Autowired
+    private PasteService mPasteService;
+
 
     public PasteController()
     {
@@ -32,7 +39,8 @@ public class PasteController {
     public void postPaste(@RequestParam(value="title", defaultValue = "Untitled") String aTitle,
                            @RequestParam(value="content", defaultValue = "none") String aContent)
     {
-        mPastes.add(new Paste(counter.getAndIncrement(), aTitle, aContent));
+        mPasteService.insert(aTitle,aContent);
+        //mPastes.add(new Paste(counter.getAndIncrement(), aTitle, aContent));
     }
 
     /**
@@ -98,8 +106,9 @@ public class PasteController {
      * @return list of all pastes
      */
     @RequestMapping("/paste/all")
-    public List<Paste> allPastes()
+    public List<Map<String,Object>> allPastes()
     {
-        return mPastes;
+        //return mPastes;
+        return mPasteService.findAllPastes();
     }
 }
