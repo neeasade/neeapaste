@@ -29,7 +29,7 @@ public class PasteController {
      * @param aContent Content of the paste
      */
     @RequestMapping(value="/paste" , method = RequestMethod.POST)
-    public void postPaste(@RequestParam(value="title", defaultValue = "none") String aTitle,
+    public void postPaste(@RequestParam(value="title", defaultValue = "Untitled") String aTitle,
                            @RequestParam(value="content", defaultValue = "none") String aContent)
     {
         mPastes.add(new Paste(counter.getAndIncrement(), aTitle, aContent));
@@ -40,8 +40,8 @@ public class PasteController {
      * @param aSearchQuery the text to search for
      * @return a list of Pastes containing the search text
      */
-    @RequestMapping("/search/{query}")
-    public List<Paste> searchPastes(@PathVariable(value = "query") String aSearchQuery)
+    @RequestMapping("/search")
+    public List<Paste> searchPastes(@RequestParam(value = "q") String aSearchQuery)
     {
         List<Paste> lReturn = new ArrayList<Paste>();
         for(Paste lPaste : mPastes) {

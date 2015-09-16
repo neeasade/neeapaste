@@ -23,7 +23,7 @@ linux/osx: `gradlew bootRun`
 A **Paste** here has the following properties: Id, Title, Content, Views.
 - Getting the value of the content property will increment the view property.
 
-A **User** here has the folowing properties: Id, username, password(hashed when stored), Pastes
+A **User** here has the following properties: Id, username, password(hashed when stored), Pastes
 - A user may own a number of pastes.
 
 ### API
@@ -32,7 +32,7 @@ GET		| result |	status
 /paste/all	| all pastes and info in json format | yes
 /paste/$id	| paste and information in json format | yes
 /paste/$id/$property | paste property value | yes
-/paste/search/$text	| return all pastes in with matching $text in title or content in json format. | yes
+/paste/search?q=$text	| return all pastes in with matching $text in title or content in json format. | yes
 /paste/$user/ | pastes own by a $user. | no
 
 POST to /paste params	| expected | status
@@ -43,19 +43,19 @@ user(optional)			| user who owns the paste | no
 pass(optional)			| password for user making post request. | no
 
 ### Database layout
-User table:
+table 'paste_users':
 
 username | password(hashed) | id
------|-----|-----
+------|-----|-----
 
-Paste table:
+table 'pastes':
 
 title | content | views | id
------|-----|-----|-----
+------|-----|-----|-----
 
 
-Relation table:
+table 'paste_relates':
 
 user id(foreign key) | paste id(foreign key)
------|-----
+------|-----
 
