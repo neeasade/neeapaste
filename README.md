@@ -1,4 +1,5 @@
 ## neeapaste
+![build status](https://api.travis-ci.org/neeasade/neeapaste.svg?branch=master)
 
 ~in active development~
 
