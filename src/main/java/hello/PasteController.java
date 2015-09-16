@@ -40,7 +40,6 @@ public class PasteController {
                            @RequestParam(value="content", defaultValue = "none") String aContent)
     {
         mPasteService.insert(aTitle,aContent);
-        //mPastes.add(new Paste(counter.getAndIncrement(), aTitle, aContent));
     }
 
     /**
@@ -68,17 +67,10 @@ public class PasteController {
      * @return the Paste object associated with the ID
      */
     @RequestMapping("/paste/{id}")
-    public Paste getPaste(@PathVariable(value="id") String aId) {
+    public Object getPaste(@PathVariable(value="id") String aId) {
         // validate id
         int lIndex = Integer.parseInt(aId);
-        if(lIndex < 0 || lIndex > mPastes.size()-1)
-        {
-            return new Paste(-1, "Not found", "Not found");
-        }
-        else
-        {
-            return mPastes.get(lIndex);
-        }
+        return mPasteService.getById(lIndex);
     }
 
     /**
@@ -90,15 +82,7 @@ public class PasteController {
     @RequestMapping("/paste/{id}/{property}")
     public String getPaste(@PathVariable(value="id") String aId,
                           @PathVariable(value="property") String aProperty) {
-        Paste lPaste = mPastes.get(Integer.parseInt(aId));
-        switch (aProperty.toLowerCase())
-        {
-            case "id": return Long.toString(lPaste.getId()); // Pretty silly. :P
-            case "title": return lPaste.getTitle();
-            case "views": return Long.toString(lPaste.getViews());
-            case "content": return lPaste.getContent();
-            default: return "Property not found.";
-        }
+        return "Not working.";
     }
 
     /**
@@ -108,7 +92,6 @@ public class PasteController {
     @RequestMapping("/paste/all")
     public List<Map<String,Object>> allPastes()
     {
-        //return mPastes;
         return mPasteService.findAllPastes();
     }
 }
