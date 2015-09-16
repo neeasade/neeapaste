@@ -10,7 +10,7 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 - [ ] allow users
 - [ ] allow pastes to be owned by users
 - [ ] https/SSL
-- [ ] continuous integration
+- [x] continuous integration
 
 Reference API below for status there.
 
