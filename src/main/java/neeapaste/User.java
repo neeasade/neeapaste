@@ -1,4 +1,4 @@
-package hello;
+package neeapaste;
 
 import java.util.List;
 import org.springframework.jdbc.*;

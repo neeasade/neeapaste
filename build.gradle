@@ -16,6 +16,7 @@ apply plugin: 'spring-boot'
 // ref http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-remote-debug-gradle-run
 // Set intelliJ debug configuration to 'Remote' and set port number and type 'socket' as below
 //		(this is default in Remote at time of this comment)
+// todo: figure out gradle task for this as argument.
 /*
 apply plugin: 'application'
 applicationDefaultJvmArgs = [
@@ -24,7 +25,7 @@ applicationDefaultJvmArgs = [
 */
 
 jar {
-    baseName = 'gs-rest-service'
+    baseName = 'neeapaste'
     version =  '0.1.0'
 }
 
