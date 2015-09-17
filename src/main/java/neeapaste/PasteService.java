@@ -1,6 +1,8 @@
 package neeapaste;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.GsonBuilderUtils;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +37,6 @@ public class PasteService {
     }
 
 
-    // TODO: change return values on below to not be objects/figure that out.
-    // query() instead of queryForList()
-
     /**
      * Return a paste object with properties set from row.
      * @param aId the id of the paste to return.
@@ -45,8 +44,16 @@ public class PasteService {
      */
     public Paste getById(long aId)
     {
-        String lSQL = "SELECT * FROM pastes WHERE id = " + Long.toString(aId);
+        // Validate aId
+        String lSQL = "SELECT COUNT(*) FROM pastes";
+        Long lPasteCount = (Long)jdbcTemplate.queryForObject(lSQL, Long.class);
+        if ( aId < 1 || aId > lPasteCount) {
+            return new Paste(-1, "null", "null", -1 );
+        }
+
+        lSQL = "SELECT * FROM pastes WHERE id = " + Long.toString(aId);
         Paste lPaste = (Paste)jdbcTemplate.queryForObject(lSQL, new PasteRowMapper());
+        // Return lPaste json.
         return lPaste;
     }
 
@@ -74,12 +81,18 @@ public class PasteService {
      */
     public String getPropertyById(Long aId, String aProperty)
     {
+        // Validate aId
+        String lSQL = "SELECT COUNT(*) FROM pastes";
+        Long lPasteCount = (Long)jdbcTemplate.queryForObject(lSQL, Long.class);
+        if ( aId < 1 || aId > lPasteCount) {
+            return "Paste not found.";
+        }
+
+        // Return the property
         Paste lPaste = getById(aId);
         aProperty = aProperty.toLowerCase();
 
-        // TODO: validate id
-        switch(aProperty)
-        {
+        switch(aProperty) {
             case "title": return lPaste.getTitle();
             case "content": incrementViewCount(aId); return lPaste.getContent();
             case "id" : return Long.toString(lPaste.getId()); // heh.
@@ -87,7 +100,6 @@ public class PasteService {
             default:
                 return "Property " + aProperty + " not found.";
         }
-
     }
 
     /**
