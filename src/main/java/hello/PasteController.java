@@ -80,9 +80,9 @@ public class PasteController {
      * @return the String value of the property
      */
     @RequestMapping("/paste/{id}/{property}")
-    public String getPaste(@PathVariable(value="id") String aId,
+    public String getPasteProperty(@PathVariable(value="id") String aId,
                           @PathVariable(value="property") String aProperty) {
-        return "Not working.";
+        return mPasteService.getPropertyById(Long.parseLong(aId), aProperty);
     }
 
     /**
