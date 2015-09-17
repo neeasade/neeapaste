@@ -12,7 +12,6 @@ public class Paste {
     private String mContent;
     private long mViews;
 
-    // if this constructor is called need to set values.
     public Paste() {
         mId = -1;
         mTitle = "";
@@ -20,11 +19,11 @@ public class Paste {
         mViews = 0;
     }
 
-    public Paste(long aId, String aTitle, String aContent) {
+    public Paste(long aId, String aTitle, String aContent, long aViews) {
         mId = aId;
         mTitle = aTitle;
         mContent = aContent;
-        mViews=0;
+        mViews=aViews;
     }
 
     // Getters
@@ -41,7 +40,6 @@ public class Paste {
 
     public String getContent()
     {
-        mViews++;
         return mContent;
     }
 

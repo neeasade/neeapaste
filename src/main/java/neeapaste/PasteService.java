@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Adler32;
 
 /**
  * For accessing the database of pastes, and methods that provide different ways of doing so.
@@ -38,14 +39,32 @@ public class PasteService {
     // query() instead of queryForList()
 
     /**
-     * Return a paste row with all properties from database - spring formats to json.
-     * @param aId
+     * Return a paste object with properties set from row.
+     * @param aId the id of the paste to return.
      * @return
      */
-    public Object getById(long aId)
+    public Paste getById(long aId)
     {
-        return jdbcTemplate.queryForList("SELECT * FROM pastes WHERE id = " + Long.toString(aId));
+        String lSQL = "SELECT * FROM pastes WHERE id = " + Long.toString(aId);
+        Paste lPaste = (Paste)jdbcTemplate.queryForObject(lSQL, new PasteRowMapper());
+        return lPaste;
     }
+
+    /**
+     * Increment the view count of a paste.
+     * @param aId The id of the paste to increment the view value on.
+     */
+    private void incrementViewCount(Long aId)
+    {
+        // Get the viewcount.
+        String lViewSQL = "SELECT views FROM pastes WHERE id = " + Long.toString(aId);
+        Long lViewCount = (Long)jdbcTemplate.queryForObject(lViewSQL, Long.class);
+
+        // Update the viewcount.
+        String lSQL = "UPDATE pastes SET views = " + Long.toString(++lViewCount) + "WHERE id = " + Long.toString(aId);
+        jdbcTemplate.update(lSQL);
+    }
+
 
     /**
      * Get the property of a paste.
@@ -53,19 +72,22 @@ public class PasteService {
      * @param aProperty The name of the property to get(column title in database)
      * @return The value of the property for this paste.
      */
-    public String getPropertyById(Long aID, String aProperty)
+    public String getPropertyById(Long aId, String aProperty)
     {
-        // TODO: validate id/property and handle that.
-        // reminder: increment views property if contenet is called.
-        // rowmapper.
-
-        // Columns are all lowercase:
+        Paste lPaste = getById(aId);
         aProperty = aProperty.toLowerCase();
 
-        // Get the string value without brackets because list, and we just want the value as a string.
-        String lReturn = jdbcTemplate.queryForList("SELECT " + aProperty + " FROM pastes WHERE id = " + Long.toString(aID)).get(0).toString();
-        lReturn = lReturn.substring(1,lReturn.length() - 1).split("=")[1];
-        return lReturn;
+        // TODO: validate id
+        switch(aProperty)
+        {
+            case "title": return lPaste.getTitle();
+            case "content": incrementViewCount(aId); return lPaste.getContent();
+            case "id" : return Long.toString(lPaste.getId()); // heh.
+            case "views" : return Long.toString(lPaste.getViews());
+            default:
+                return "Property " + aProperty + " not found.";
+        }
+
     }
 
     /**

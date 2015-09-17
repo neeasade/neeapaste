@@ -67,7 +67,7 @@ public class PasteController {
      * @return the Paste object associated with the ID
      */
     @RequestMapping("/paste/{id}")
-    public Object getPaste(@PathVariable(value="id") String aId) {
+    public Paste getPaste(@PathVariable(value="id") String aId) {
         // validate id
         int lIndex = Integer.parseInt(aId);
         return mPasteService.getById(lIndex);
