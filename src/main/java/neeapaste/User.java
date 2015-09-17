@@ -10,7 +10,6 @@ public class User {
 
     private String mUsername;
     private String mPassword;
-    private List<Long> aOwnedPastes;
 
     /**
      * Create a new user
@@ -19,7 +18,8 @@ public class User {
      */
     public User(String aUsername, String aPassword)
     {
-
+        mUsername = aUsername;
+        mPassword = aPassword;
     }
 
     /**

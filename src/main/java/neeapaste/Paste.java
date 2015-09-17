@@ -48,25 +48,4 @@ public class Paste {
         return mTitle;
     }
 
-    // Setters
-
-    public void setTitle(String aTitle)
-    {
-        this.mTitle = aTitle;
-    }
-
-    public void setContent(String aContent)
-    {
-        this.mContent = aContent;
-    }
-
-    public void setId(Long aId)
-    {
-        this.mId = aId;
-    }
-
-    public void setViews(Long aViews)
-    {
-        this.mViews = aViews;
-    }
 }
