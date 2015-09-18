@@ -18,17 +18,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class PasteController {
 
     private final AtomicLong counter = new AtomicLong();
-    //Manage a list of pastes:
-    private List<Paste> mPastes;
 
     @Autowired
     private PasteService mPasteService;
 
-
-    public PasteController()
-    {
-        mPastes = new ArrayList<Paste>();
-    }
+    @Autowired
+    private UserService mUserService;
 
     /**
      * Add a new paste via post with data
@@ -36,10 +31,18 @@ public class PasteController {
      * @param aContent Content of the paste
      */
     @RequestMapping(value="/paste" , method = RequestMethod.POST)
-    public void postPaste(@RequestParam(value="title", defaultValue = "Untitled") String aTitle,
-                           @RequestParam(value="content", defaultValue = "none") String aContent)
+    public String postPaste(@RequestParam(value="title", defaultValue = "Untitled") String aTitle,
+                            @RequestParam(value="content", defaultValue = "none") String aContent,
+                            @RequestParam(value="user", defaultValue = "none") String aUser,
+                            @RequestParam(value="pass", defaultValue = "none") String aPass)
     {
+        if (!aUser.equals("none")  && !aPass.equals("none")) {
+            mUserService.authenticate(aUser,aPass);
+        }
+
         mPasteService.insert(aTitle,aContent);
+        // Return url with paste.
+        return "http://localhost:8080/paste/" + Long.toString(mPasteService.getLastPasteId()) + "\n";
     }
 
     /**
@@ -50,6 +53,9 @@ public class PasteController {
     @RequestMapping("/search")
     public List<Paste> searchPastes(@RequestParam(value = "q") String aSearchQuery)
     {
+        //TODO - mPastesService.search
+        return new ArrayList<>();
+    /*
         List<Paste> lReturn = new ArrayList<Paste>();
         for(Paste lPaste : mPastes) {
             // Search both content and title
@@ -58,7 +64,8 @@ public class PasteController {
             }
         }
         return lReturn;
-}
+        */
+    }
 
     /**
      * Get a paste and it's attributes.
@@ -93,5 +100,21 @@ public class PasteController {
     public List<Map<String,Object>> allPastes()
     {
         return mPasteService.findAllPastes();
+    }
+
+    @RequestMapping(value = "/user/create/", method = RequestMethod.POST)
+    public String createUser(@RequestParam(value = "user", defaultValue = "none") String aUser,
+                             @RequestParam(value = "pass", defaultValue = "none") String aPass)
+    {
+        if (aUser == "none" || aPass == "none") {
+            return "Attach data parameters 'user' and 'pass' to create a new user.";
+        }
+
+        if (mUserService.exists(aUser)) {
+            return "Username taken.";
+        }
+
+        mUserService.insert(aUser,aPass);
+        return "User created.";
     }
 }

@@ -27,8 +27,9 @@ public class User {
      * @param password
      * @return
      */
-    public boolean authenticate(String password)
+    public boolean authenticate(String aPassword)
     {
-        return false;
+        // Doing bad things.
+        return (aPassword == mPassword);
     }
 }

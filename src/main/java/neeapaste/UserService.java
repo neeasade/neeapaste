@@ -1,6 +1,5 @@
 package neeapaste;
 
-import com.sun.istack.internal.Nullable;
 import org.apache.catalina.users.AbstractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,12 +42,18 @@ public class UserService {
         String lPassword = lEncoder.encode(aPassword);
 
         //Insert the new user into the paste_users table.
-        jdbcTemplate.update("INSERT INTO paste_users(username, password) VALUES(?, ?)", aUsername, lPassword, 0);
+        jdbcTemplate.update("INSERT INTO paste_users(username, password) VALUES(?, ?)", aUsername, lPassword);
     }
 
-    public boolean authenticate(String password)
+    /**
+     * Authenticate a user to do an action.
+     * @param aId
+     * @param aPassword
+     * @return
+     */
+    public boolean authenticate(String aUserName, String aPassword)
     {
-
+        return getById(getIdFromUsername(aUserName)).authenticate(aPassword);
     }
 
     /**
@@ -59,15 +64,18 @@ public class UserService {
         // form: SELECT * FROM pastes WHERE id IN (1,2,3)
         //Gather the ID's belong ing to this user.
         List lPasteRows = jdbcTemplate.queryForList("SELECT paste_id FROM paste_relates WHERE user_id = " + Long.toString(aId));
-        List<Long> lPasteIds = new ArrayList<Long>();
+        List<Long> lPasteIds = new ArrayList<>();
+        // TODO
+        /*
         for (Map m : lPasteRows)
         {
-            Long asdf = (Long)m.get('a');
-            lPasteIds.add(m.get('paste_id'));
+            Long asdf = (Long)m.get("paste_id");
+            String asdfasdf = "";
         }
+        */
         return jdbcTemplate.queryForList("SELECT id FROM pastes ORDER BY id");
     }
-    @Nullable
+
     private User getById(long aId)
     {
         //validate id
@@ -82,4 +90,26 @@ public class UserService {
         return lUser;
     }
 
+    private Long getIdFromUsername(String aUsername)
+    {
+        String lSQL = "SELECT id FROM paste_users WHERE username = " + aUsername;
+        return jdbcTemplate.queryForObject(lSQL, Long.class);
+    }
+
+    public void setPasteOwner(Long aUserId, Long aPasteId)
+    {
+        //insert a relation into the pastes_relate table
+        jdbcTemplate.update("INSERT INTO paste_relates(paste_id, user_id) VALUES(?, ?)", Long.toString(aPasteId), Long.toString(aUserId));
+    }
+
+    /**
+     * Return true if a user exists.
+     * @param aUsername
+     * @return
+     */
+    public boolean exists(String aUsername)
+    {
+        // TODO
+        return false;
+    }
 }

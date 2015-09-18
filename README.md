@@ -8,7 +8,7 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 ### TODO
 - [x] allow pastes
 - [ ] database persistence
-- [ ] allow users
+- [x] allow users
 - [ ] allow pastes to be owned by users
 - [ ] https/SSL
 - [x] continuous integration
@@ -46,7 +46,7 @@ POST | params | status
 ^      | content(required) |
 ^      | user(optional) |
 ^      | pass(optional, paired with user) |
-/user/create | user | no
+/user/create | user | yes
 ^            | pass |
 
 ### Database layout
@@ -63,6 +63,6 @@ id    |title| content | views
 
 table 'paste_relates':
 
-paste id(foreign key) | user id(foreign key)
+paste_id(foreign key) | user_id(foreign key)
 ------|-----
 

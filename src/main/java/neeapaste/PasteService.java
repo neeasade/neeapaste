@@ -20,8 +20,6 @@ public class PasteService {
 
     private JdbcTemplate jdbcTemplate;
 
-    // I am unsure if that is how this works.
-
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -108,6 +106,15 @@ public class PasteService {
      */
     public List<Map<String, Object>> findAllPastes() {
         return jdbcTemplate.queryForList("SELECT * FROM pastes ORDER BY id");
+    }
+
+    /**
+     * Return the id of the last paste in the pastes table.
+     * @return
+     */
+    public Long getLastPasteId()
+    {
+        return jdbcTemplate.queryForObject("SELECT id FROM pastes ORDER BY id DESC LIMIT 1", Long.class);
     }
 
 }
