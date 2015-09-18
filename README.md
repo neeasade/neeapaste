@@ -42,7 +42,7 @@ GET		| result |	status
 /paste/$id	| paste and information in json format | yes
 /paste/$id/$property | paste property value | yes
 /search?q=$text	| return all pastes in with matching $text in title or content in json format. | yes
-/user/$user/ | pastes own by a $user. | no
+/user/$user/ | pastes own by a $user. | yes
 
 POST | params | status
 ------------------------|----------|----

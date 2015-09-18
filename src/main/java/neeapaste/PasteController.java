@@ -82,7 +82,7 @@ public class PasteController {
      * @return
      */
     @RequestMapping("/user/{user}")
-    public List<Paste> getUserPastes(String aUser)
+    public List<Paste> getUserPastes(@PathVariable(value = "user") String aUser)
     {
         return mPasteService.getPastesbyId(mUserService.findPastes(aUser));
     }
