@@ -3,6 +3,8 @@
 
 ~in active development~
 
+~now with spaghetti code~
+
 A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 
 ### TODO

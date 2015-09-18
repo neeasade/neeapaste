@@ -37,12 +37,18 @@ public class PasteController {
                             @RequestParam(value="pass", defaultValue = "none") String aPass)
     {
         if (!aUser.equals("none")  && !aPass.equals("none")) {
-            mUserService.authenticate(aUser,aPass);
+            if (mUserService.authenticate(aUser,aPass)) {
+                Long lPasteId = mPasteService.insert(aTitle,aContent);
+                return "http://localhost:8080/paste/" + Long.toString(lPasteId) + "\n";
+            }
+            else {
+                return "Authentification failed.";
+            }
         }
-
-        mPasteService.insert(aTitle,aContent);
-        // Return url with paste.
-        return "http://localhost:8080/paste/" + Long.toString(mPasteService.getLastPasteId()) + "\n";
+        else {
+            Long lPasteId = mPasteService.insert(aTitle,aContent);
+            return "http://localhost:8080/paste/" + Long.toString(lPasteId) + "\n";
+        }
     }
 
     /**
@@ -51,20 +57,10 @@ public class PasteController {
      * @return a list of Pastes containing the search text
      */
     @RequestMapping("/search")
-    public List<Paste> searchPastes(@RequestParam(value = "q") String aSearchQuery)
+    public List<Paste> searchPastes(@RequestParam(value = "q", defaultValue = "none") String aSearchQuery)
     {
         //TODO - mPastesService.search
-        return new ArrayList<>();
-    /*
-        List<Paste> lReturn = new ArrayList<Paste>();
-        for(Paste lPaste : mPastes) {
-            // Search both content and title
-            if ( (lPaste.getContent() + lPaste.getTitle()).toLowerCase().contains(aSearchQuery.toLowerCase())) {
-                lReturn.add(lPaste);
-            }
-        }
-        return lReturn;
-        */
+        return mPasteService.searchPastes(aSearchQuery);
     }
 
     /**
@@ -106,7 +102,7 @@ public class PasteController {
     public String createUser(@RequestParam(value = "user", defaultValue = "none") String aUser,
                              @RequestParam(value = "pass", defaultValue = "none") String aPass)
     {
-        if (aUser == "none" || aPass == "none") {
+        if (aUser.equals("none") || aPass.equals("none")) {
             return "Attach data parameters 'user' and 'pass' to create a new user.";
         }
 

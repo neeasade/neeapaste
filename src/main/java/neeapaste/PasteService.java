@@ -1,5 +1,6 @@
 package neeapaste;
 
+import com.sun.corba.se.pept.transport.ListenerThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.Adler32;
@@ -30,9 +32,11 @@ public class PasteService {
      * @param aTitle Title property of new paste.
      * @param aContent Content property of new paste.
      */
-    public void insert(String aTitle, String aContent) {
+    public Long insert(String aTitle, String aContent) {
         jdbcTemplate.update("INSERT INTO pastes(title, content, views) VALUES(?, ?, ?)", aTitle, aContent, 0);
+        return getLastPasteId();
     }
+
 
 
     /**
@@ -106,6 +110,26 @@ public class PasteService {
      */
     public List<Map<String, Object>> findAllPastes() {
         return jdbcTemplate.queryForList("SELECT * FROM pastes ORDER BY id");
+    }
+
+    /**
+     * Return paste rows that contain a search in title or content(case insensitive)
+     */
+    public List<Paste> searchPastes(String aQuery) {
+        // Loop through the pastes and get matching Ids
+        List<Paste> lMatchingPastes = new ArrayList<>();
+        List<Map<String, Object>> lAllPastes = findAllPastes();
+
+        String lContent, lTitle;
+        for (Map row : lAllPastes) {
+            lContent = (String)row.get("content");
+            lTitle = (String)row.get("title");
+            if ((lContent + lTitle).toLowerCase().contains(aQuery.toLowerCase())) {
+                // halp
+                lMatchingPastes.add(new Paste((Integer) row.get("id"), lTitle, lContent, (Integer) row.get("views")));
+            }
+        }
+        return lMatchingPastes;
     }
 
     /**
