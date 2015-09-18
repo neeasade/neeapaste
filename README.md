@@ -11,11 +11,13 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 - [x] allow pastes
 - [ ] database persistence
 - [x] allow users
-- [ ] allow pastes to be owned by users
+- [x] allow pastes to be owned by users
 - [ ] https/SSL
 - [x] continuous integration
 - [ ] unit testing
 - [ ] store passwords in not plain text
+- [ ] better error handling/edge cases/validation
+- [ ] clean code
 
 Reference API below for status there.
 
@@ -39,8 +41,8 @@ GET		| result |	status
 /paste/all	| all pastes and info in json format | yes
 /paste/$id	| paste and information in json format | yes
 /paste/$id/$property | paste property value | yes
-/paste/search?q=$text	| return all pastes in with matching $text in title or content in json format. | yes
-/paste/$user/ | pastes own by a $user. | no
+/search?q=$text	| return all pastes in with matching $text in title or content in json format. | yes
+/user/$user/ | pastes own by a $user. | no
 
 POST | params | status
 ------------------------|----------|----

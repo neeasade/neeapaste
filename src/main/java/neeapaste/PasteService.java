@@ -1,18 +1,13 @@
 package neeapaste;
 
-import com.sun.corba.se.pept.transport.ListenerThread;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.GsonBuilderUtils;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Adler32;
 
 /**
  * For accessing the database of pastes, and methods that provide different ways of doing so.
@@ -139,6 +134,20 @@ public class PasteService {
     public Long getLastPasteId()
     {
         return jdbcTemplate.queryForObject("SELECT id FROM pastes ORDER BY id DESC LIMIT 1", Long.class);
+    }
+
+    /**
+     * Return pastes matching a list of ids.
+     * @param aPasteIds
+     */
+    public List<Paste> getPastesbyId(List<Long> aPasteIds)
+    {
+        // form: SELECT * FROM pastes WHERE id IN (1,2,3)
+        List<Paste> lPastes = new ArrayList<>();
+        for(Long lId : aPasteIds) {
+            lPastes.add(getById(lId));
+        }
+        return lPastes;
     }
 
 }

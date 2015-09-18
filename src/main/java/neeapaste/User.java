@@ -30,6 +30,6 @@ public class User {
     public boolean authenticate(String aPassword)
     {
         // Doing bad things.
-        return (aPassword == mPassword);
+        return (aPassword.equals(mPassword));
     }
 }

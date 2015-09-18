@@ -39,6 +39,7 @@ public class PasteController {
         if (!aUser.equals("none")  && !aPass.equals("none")) {
             if (mUserService.authenticate(aUser,aPass)) {
                 Long lPasteId = mPasteService.insert(aTitle,aContent);
+                mUserService.ownPaste(aUser,lPasteId);
                 return "http://localhost:8080/paste/" + Long.toString(lPasteId) + "\n";
             }
             else {
@@ -71,9 +72,19 @@ public class PasteController {
      */
     @RequestMapping("/paste/{id}")
     public Paste getPaste(@PathVariable(value="id") String aId) {
-        // validate id
         int lIndex = Integer.parseInt(aId);
         return mPasteService.getById(lIndex);
+    }
+
+    /**
+     * return all pastes belonging to a user.
+     * @param aUser
+     * @return
+     */
+    @RequestMapping("/user/{user}")
+    public List<Paste> getUserPastes(String aUser)
+    {
+        return mPasteService.getPastesbyId(mUserService.findPastes(aUser));
     }
 
     /**

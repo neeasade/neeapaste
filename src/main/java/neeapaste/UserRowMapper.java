@@ -11,7 +11,6 @@ import java.sql.SQLException;
 public class UserRowMapper implements RowMapper {
     public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new User(rs.getString("username"),
-                        rs.getString("password)"));
+                        rs.getString("password"));
     }
-
 }

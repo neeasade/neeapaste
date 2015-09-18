@@ -1,6 +1,5 @@
 package neeapaste;
 
-import org.apache.catalina.users.AbstractUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -36,11 +35,11 @@ public class UserService {
         //TODO: trim values to set lengths
 
         //New user, hash the password.
-        BCryptPasswordEncoder lEncoder = new BCryptPasswordEncoder();
-        String lPassword = lEncoder.encode(aPassword);
+        //BCryptPasswordEncoder lEncoder = new BCryptPasswordEncoder();
+        //String lPassword = lEncoder.encode(aPassword);
 
         //Insert the new user into the paste_users table.
-        jdbcTemplate.update("INSERT INTO paste_users(username, password) VALUES(?, ?)", aUsername, lPassword);
+        jdbcTemplate.update("INSERT INTO paste_users(username, password) VALUES(?, ?)", aUsername, aPassword);
     }
 
     /**
@@ -55,42 +54,40 @@ public class UserService {
     }
 
     /**
-     * Get all pastes belonging to a user.
+     * Get all paste Id's belonging to a user.
      * @return
      */
-    public List<Map<String, Object>> findAllPastes(Long aId) {
-        // form: SELECT * FROM pastes WHERE id IN (1,2,3)
+    public List<Long> findPastes(String aUsername) {
+        Long lId = getIdFromUsername(aUsername);
         //Gather the ID's belong ing to this user.
-        List lPasteRows = jdbcTemplate.queryForList("SELECT paste_id FROM paste_relates WHERE user_id = " + Long.toString(aId));
+        List<Map<String,Object>> lPasteRows = jdbcTemplate.queryForList("SELECT * FROM paste_relates WHERE user_id = " + Long.toString(lId));
         List<Long> lPasteIds = new ArrayList<>();
-        // TODO
-        /*
-        for (Map m : lPasteRows)
+
+        for (Map lRow : lPasteRows)
         {
-            Long asdf = (Long)m.get("paste_id");
-            String asdfasdf = "";
+            lPasteIds.add((Long)lRow.get("paste_id"));
         }
-        */
-        return jdbcTemplate.queryForList("SELECT id FROM pastes ORDER BY id");
+
+        return lPasteIds;
     }
 
     private User getById(long aId)
     {
         //validate id
-        String lSQL = "SELECT COUNT(*) FROM pastes";
+        String lSQL = "SELECT COUNT(*) FROM paste_users";
         Long lUserCount = jdbcTemplate.queryForObject(lSQL, Long.class);
         if ( aId < 1 || aId > lUserCount) {
             return null;
         }
 
-        lSQL = "SELECT * FROM pastes WHERE id = " + Long.toString(aId);
+        lSQL = "SELECT * FROM paste_users WHERE id = " + Long.toString(aId);
         User lUser = (User)jdbcTemplate.queryForObject(lSQL, new UserRowMapper());
         return lUser;
     }
 
     private Long getIdFromUsername(String aUsername)
     {
-        String lSQL = "SELECT id FROM paste_users WHERE username = " + aUsername;
+        String lSQL = "SELECT id FROM paste_users WHERE username = '" + aUsername + "'";
         return jdbcTemplate.queryForObject(lSQL, Long.class);
     }
 
@@ -116,5 +113,16 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Give ownership of a paste to this user.
+     * @param aPasteId
+     */
+    public void ownPaste(String aUsername, Long aPasteId)
+    {
+        //todo: validation
+        Long lId = getIdFromUsername(aUsername);
+        jdbcTemplate.update("INSERT INTO paste_relates(paste_id, user_id) VALUES(?, ?)", lId, aPasteId);
     }
 }
