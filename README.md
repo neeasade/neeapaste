@@ -13,6 +13,7 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 - [ ] https/SSL
 - [x] continuous integration
 - [ ] unit testing
+- [ ] store passwords in not plain text
 
 Reference API below for status there.
 
@@ -39,12 +40,14 @@ GET		| result |	status
 /paste/search?q=$text	| return all pastes in with matching $text in title or content in json format. | yes
 /paste/$user/ | pastes own by a $user. | no
 
-POST to /paste params	| expected | status
+POST | params | status
 ------------------------|----------|----
-title(default 'Untitled')   | title of a paste. | yes
-content(default 'none') | content of a paste. | yes
-user(optional)			| user who owns the paste | no
-pass(optional)			| password for user making post request. | no
+/paste | title(default 'Untitled')(optional) | yes
+^      | content(required) |
+^      | user(optional) |
+^      | pass(optional, paired with user) |
+/user/create | user | no
+^            | pass |
 
 ### Database layout
 table 'paste_users':
