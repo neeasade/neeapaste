@@ -20,8 +20,6 @@ public class UserService {
 
     private JdbcTemplate jdbcTemplate;
 
-    // I am unsure if that is how this works.
-
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -109,7 +107,14 @@ public class UserService {
      */
     public boolean exists(String aUsername)
     {
-        // TODO
-        return false;
+        // Don't do this at home, kiddos
+        try {
+            jdbcTemplate.queryForObject("SELECT username FROM paste_users WHERE username = '" + aUsername + "'", String.class);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return true;
     }
 }
