@@ -22,11 +22,13 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 Reference API below for status there.
 
 ### Running
-Assuming you have java and javac in your path:
+Assuming you have java and javac in your path(1.8):
 
 windows: `gradlew.bat bootRun`
 
 linux/osx: `gradlew bootRun`
+
+The pastebin will then be hosted on http://localhost:8080/.
 
 ### Definitions
 A **Paste** here has the following properties: Id, Title, Content, Views.
