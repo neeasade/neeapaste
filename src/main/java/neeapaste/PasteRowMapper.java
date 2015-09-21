@@ -18,5 +18,4 @@ public class PasteRowMapper implements RowMapper {
             		 	 rs.getString("content"),
             			 rs.getLong("views"));
 	}
-
 }

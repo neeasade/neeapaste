@@ -39,8 +39,7 @@ public class PasteService {
      * @param aId the id of the paste to return.
      * @return
      */
-    public Paste getById(long aId)
-    {
+    public Paste getById(long aId) {
         // Validate aId
         String lSQL = "SELECT COUNT(*) FROM pastes";
         Long lPasteCount = (Long)jdbcTemplate.queryForObject(lSQL, Long.class);
@@ -58,8 +57,7 @@ public class PasteService {
      * Increment the view count of a paste.
      * @param aId The id of the paste to increment the view value on.
      */
-    private void incrementViewCount(Long aId)
-    {
+    private void incrementViewCount(Long aId) {
         // Get the viewcount.
         String lViewSQL = "SELECT views FROM pastes WHERE id = " + Long.toString(aId);
         Long lViewCount = (Long)jdbcTemplate.queryForObject(lViewSQL, Long.class);
@@ -76,8 +74,7 @@ public class PasteService {
      * @param aProperty The name of the property to get(column title in database)
      * @return The value of the property for this paste.
      */
-    public String getPropertyById(Long aId, String aProperty)
-    {
+    public String getPropertyById(Long aId, String aProperty) {
         // Validate aId
         String lSQL = "SELECT COUNT(*) FROM pastes";
         Long lPasteCount = (Long)jdbcTemplate.queryForObject(lSQL, Long.class);
@@ -131,8 +128,7 @@ public class PasteService {
      * Return the id of the last paste in the pastes table.
      * @return
      */
-    public Long getLastPasteId()
-    {
+    public Long getLastPasteId() {
         return jdbcTemplate.queryForObject("SELECT id FROM pastes ORDER BY id DESC LIMIT 1", Long.class);
     }
 
@@ -140,8 +136,7 @@ public class PasteService {
      * Return pastes matching a list of ids.
      * @param aPasteIds
      */
-    public List<Paste> getPastesbyId(List<Long> aPasteIds)
-    {
+    public List<Paste> getPastesbyId(List<Long> aPasteIds) {
         // form: SELECT * FROM pastes WHERE id IN (1,2,3)
         List<Paste> lPastes = new ArrayList<>();
         for(Long lId : aPasteIds) {
@@ -149,7 +144,6 @@ public class PasteService {
         }
         return lPastes;
     }
-
 }
 
 

@@ -28,23 +28,19 @@ public class Paste {
 
     // Getters
 
-    public long getViews()
-    {
+    public long getViews() {
         return mViews;
     }
 
-    public long getId()
-    {
+    public long getId() {
         return mId;
     }
 
-    public String getContent()
-    {
+    public String getContent() {
         return mContent;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return mTitle;
     }
 

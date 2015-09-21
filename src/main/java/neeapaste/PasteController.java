@@ -60,7 +60,6 @@ public class PasteController {
     @RequestMapping("/search")
     public List<Paste> searchPastes(@RequestParam(value = "q", defaultValue = "none") String aSearchQuery)
     {
-        //TODO - mPastesService.search
         return mPasteService.searchPastes(aSearchQuery);
     }
 

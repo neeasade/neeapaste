@@ -16,8 +16,7 @@ public class User {
      * @param aUsername
      * @param aPassword
      */
-    public User(String aUsername, String aPassword)
-    {
+    public User(String aUsername, String aPassword) {
         mUsername = aUsername;
         mPassword = aPassword;
     }
@@ -27,8 +26,7 @@ public class User {
      * @param password
      * @return
      */
-    public boolean authenticate(String aPassword)
-    {
+    public boolean authenticate(String aPassword) {
         // Doing bad things.
         return (aPassword.equals(mPassword));
     }

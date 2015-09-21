@@ -30,8 +30,7 @@ public class UserService {
      * @param aUsername
      * @param aPassword
      */
-    public void insert(String aUsername, String aPassword)
-    {
+    public void insert(String aUsername, String aPassword) {
         //TODO: trim values to set lengths
 
         //New user, hash the password.
@@ -48,8 +47,7 @@ public class UserService {
      * @param aPassword
      * @return
      */
-    public boolean authenticate(String aUserName, String aPassword)
-    {
+    public boolean authenticate(String aUserName, String aPassword) {
         return getById(getIdFromUsername(aUserName)).authenticate(aPassword);
     }
 
@@ -63,16 +61,14 @@ public class UserService {
         List<Map<String,Object>> lPasteRows = jdbcTemplate.queryForList("SELECT * FROM paste_relates WHERE user_id = " + Long.toString(lId));
         List<Long> lPasteIds = new ArrayList<>();
 
-        for (Map lRow : lPasteRows)
-        {
+        for (Map lRow : lPasteRows) {
             lPasteIds.add((Long)lRow.get("paste_id"));
         }
 
         return lPasteIds;
     }
 
-    private User getById(long aId)
-    {
+    private User getById(long aId) {
         //validate id
         String lSQL = "SELECT COUNT(*) FROM paste_users";
         Long lUserCount = jdbcTemplate.queryForObject(lSQL, Long.class);
@@ -85,16 +81,9 @@ public class UserService {
         return lUser;
     }
 
-    private Long getIdFromUsername(String aUsername)
-    {
+    private Long getIdFromUsername(String aUsername) {
         String lSQL = "SELECT id FROM paste_users WHERE username = '" + aUsername + "'";
         return jdbcTemplate.queryForObject(lSQL, Long.class);
-    }
-
-    public void setPasteOwner(Long aUserId, Long aPasteId)
-    {
-        //insert a relation into the pastes_relate table
-        jdbcTemplate.update("INSERT INTO paste_relates(paste_id, user_id) VALUES(?, ?)", Long.toString(aPasteId), Long.toString(aUserId));
     }
 
     /**
@@ -102,14 +91,12 @@ public class UserService {
      * @param aUsername
      * @return
      */
-    public boolean exists(String aUsername)
-    {
+    public boolean exists(String aUsername) {
         // Don't do this at home, kiddos
         try {
             jdbcTemplate.queryForObject("SELECT username FROM paste_users WHERE username = '" + aUsername + "'", String.class);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return false;
         }
         return true;
@@ -119,10 +106,12 @@ public class UserService {
      * Give ownership of a paste to this user.
      * @param aPasteId
      */
-    public void ownPaste(String aUsername, Long aPasteId)
-    {
-        //todo: validation
-        Long lId = getIdFromUsername(aUsername);
-        jdbcTemplate.update("INSERT INTO paste_relates(paste_id, user_id) VALUES(?, ?)", lId, aPasteId);
+    public boolean ownPaste(String aUsername, Long aPasteId) {
+        if(exists(aUsername)) {
+            Long lId = getIdFromUsername(aUsername);
+            jdbcTemplate.update("INSERT INTO paste_relates(paste_id, user_id) VALUES(?, ?)", lId, aPasteId);
+            return true;
+        }
+        return false;
     }
 }
