@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -34,11 +35,10 @@ public class UserService {
         //TODO: trim values to set lengths
 
         //New user, hash the password.
-        //BCryptPasswordEncoder lEncoder = new BCryptPasswordEncoder();
-        //String lPassword = lEncoder.encode(aPassword);
+        String lPassword = BCrypt.hashpw(aPassword, BCrypt.gensalt());
 
         //Insert the new user into the paste_users table.
-        jdbcTemplate.update("INSERT INTO paste_users(username, password) VALUES(?, ?)", aUsername, aPassword);
+        jdbcTemplate.update("INSERT INTO paste_users(username, password) VALUES(?, ?)", aUsername, lPassword);
     }
 
     /**

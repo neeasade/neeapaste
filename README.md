@@ -15,7 +15,7 @@ A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
 - [ ] https/SSL
 - [x] continuous integration
 - [ ] unit testing
-- [ ] store passwords in not plain text
+- [x] store passwords in not plain text
 - [ ] better error handling/edge cases/validation
 - [ ] clean code
 

@@ -2,6 +2,7 @@ package neeapaste;
 
 import java.util.List;
 import org.springframework.jdbc.*;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  * Class to represent a User.
@@ -23,11 +24,10 @@ public class User {
 
     /**
      * Return true if correct password associated with user
-     * @param password
+     * @param aPassword The password to validate
      * @return
      */
     public boolean authenticate(String aPassword) {
-        // Doing bad things.
-        return (aPassword.equals(mPassword));
+        return BCrypt.checkpw(aPassword,mPassword);
     }
 }
