@@ -33,9 +33,7 @@ public class User {
     public void OwnPaste(Paste aPaste)
     {
         this.Pastes.add(aPaste);
-        if (aPaste.getOwner() != this) {
-            aPaste.setOwner(this);
-        }
+        aPaste.setOwner(this);
     }
 
     /**

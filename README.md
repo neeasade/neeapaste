@@ -12,10 +12,8 @@ A pastebin implementation for me to practice Java, Spring, Gradle, ~~JDBC~~jpa/h
 - [x] allow pastes to be owned by users
 - [ ] https/SSL
 - [x] continuous integration
-- [ ] unit testing
+- [ ] testing/code coverage
 - [x] store passwords in not plain text
-- [ ] better error handling/edge cases/validation
-- [ ] clean code
 
 Reference API below for status there.
 
@@ -54,19 +52,4 @@ POST | params | status
 ^            | pass |
 
 ### Database layout
-table 'paste_users':
-
-id | username | password(hashed)
-------|-----|-----
-
-table 'pastes':
-
-id    |title| content | views
-------|-----|-----|-----
-
-
-table 'paste_relates':
-
-paste_id(foreign key) | user_id(foreign key)
-------|-----
-
+Refer to User and Paste Entites in src.

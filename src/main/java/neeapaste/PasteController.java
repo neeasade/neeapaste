@@ -44,7 +44,7 @@ public class PasteController {
             if (lUser.authenticate(aPass)) {
                 Paste lPaste = new Paste(aTitle,aContent);
                 mPasteRepo.save(lPaste);
-                lUser.OwnPaste(lPaste);
+                lUser.OwnPaste(mPasteRepo.findOne(mPasteRepo.count()));
                 mUserRepo.save(lUser);
                 return "http://localhost:8080/paste/" + Long.toString(mPasteRepo.count()) + "\n";
             }

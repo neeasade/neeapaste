@@ -36,11 +36,6 @@ public class Paste {
         this.views = Long.parseLong("0");
     }
 
-    public User getOwner()
-    {
-        return Owner;
-    }
-
     public void setOwner(User aUser)
     {
         this.Owner = aUser;
