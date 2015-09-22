@@ -1,6 +1,10 @@
 package neeapaste;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -17,13 +22,12 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 public class PasteController {
 
-    private final AtomicLong counter = new AtomicLong();
+    @Autowired
+    private PasteRepository mPasteRepo;
 
     @Autowired
-    private PasteService mPasteService;
+    private UserRepository mUserRepo;
 
-    @Autowired
-    private UserService mUserService;
 
     /**
      * Add a new paste via post with data
@@ -34,21 +38,23 @@ public class PasteController {
     public String postPaste(@RequestParam(value="title", defaultValue = "Untitled") String aTitle,
                             @RequestParam(value="content", defaultValue = "none") String aContent,
                             @RequestParam(value="user", defaultValue = "none") String aUser,
-                            @RequestParam(value="pass", defaultValue = "none") String aPass)
-    {
+                            @RequestParam(value="pass", defaultValue = "none") String aPass) {
         if (!aUser.equals("none")  && !aPass.equals("none")) {
-            if (mUserService.authenticate(aUser,aPass)) {
-                Long lPasteId = mPasteService.insert(aTitle,aContent);
-                mUserService.ownPaste(aUser,lPasteId);
-                return "http://localhost:8080/paste/" + Long.toString(lPasteId) + "\n";
+            User lUser = mUserRepo.findByUsername(aUser);
+            if (lUser.authenticate(aPass)) {
+                Paste lPaste = new Paste(aTitle,aContent);
+                mPasteRepo.save(lPaste);
+                lUser.OwnPaste(lPaste);
+                mUserRepo.save(lUser);
+                return "http://localhost:8080/paste/" + Long.toString(mPasteRepo.count()) + "\n";
             }
             else {
                 return "Authentification failed.";
             }
         }
         else {
-            Long lPasteId = mPasteService.insert(aTitle,aContent);
-            return "http://localhost:8080/paste/" + Long.toString(lPasteId) + "\n";
+            mPasteRepo.save(new Paste(aTitle,aContent));
+            return "http://localhost:8080/paste/" + Long.toString(mPasteRepo.count()) + "\n";
         }
     }
 
@@ -58,9 +64,16 @@ public class PasteController {
      * @return a list of Pastes containing the search text
      */
     @RequestMapping("/search")
-    public List<Paste> searchPastes(@RequestParam(value = "q", defaultValue = "none") String aSearchQuery)
-    {
-        return mPasteService.searchPastes(aSearchQuery);
+    public List<Paste> searchPastes(@RequestParam(value = "q", defaultValue = "none") String aSearchQuery) {
+        // Search all pastes:
+        List<Paste> lMatches = new ArrayList<>();
+        for (Paste lPaste : mPasteRepo.findAll()) {
+            if ((lPaste.getTitle() + lPaste.getContent()).toLowerCase().contains(aSearchQuery))
+            {
+                lMatches.add(lPaste);
+            }
+        }
+       return lMatches;
     }
 
     /**
@@ -71,8 +84,8 @@ public class PasteController {
      */
     @RequestMapping("/paste/{id}")
     public Paste getPaste(@PathVariable(value="id") String aId) {
-        int lIndex = Integer.parseInt(aId);
-        return mPasteService.getById(lIndex);
+        long lIndex = Integer.parseInt(aId);
+        return mPasteRepo.findOne(lIndex);
     }
 
     /**
@@ -81,9 +94,8 @@ public class PasteController {
      * @return
      */
     @RequestMapping("/user/{user}")
-    public List<Paste> getUserPastes(@PathVariable(value = "user") String aUser)
-    {
-        return mPasteService.getPastesbyId(mUserService.findPastes(aUser));
+    public List<Paste> getUserPastes(@PathVariable(value = "user") String aUser) {
+        return mUserRepo.findByUsername(aUser).Pastes;
     }
 
     /**
@@ -95,7 +107,23 @@ public class PasteController {
     @RequestMapping("/paste/{id}/{property}")
     public String getPasteProperty(@PathVariable(value="id") String aId,
                           @PathVariable(value="property") String aProperty) {
-        return mPasteService.getPropertyById(Long.parseLong(aId), aProperty);
+        Long lId = Long.parseLong(aId);
+        if ( lId < 1 || lId > mPasteRepo.count()) {
+            return "Paste not found.";
+        }
+
+        // Return the property
+        Paste lPaste = mPasteRepo.findOne(lId);
+        aProperty = aProperty.toLowerCase();
+
+        switch(aProperty) {
+            case "title": return lPaste.getTitle();
+            case "content": lPaste.setViews(lPaste.getViews()+1) ; return lPaste.getContent();
+            case "id" : return Long.toString(lPaste.getId()); // heh.
+            case "views" : return Long.toString(lPaste.getViews());
+            default:
+                return "Property " + aProperty + " not found.";
+        }
     }
 
     /**
@@ -103,24 +131,28 @@ public class PasteController {
      * @return list of all pastes
      */
     @RequestMapping("/paste/all")
-    public List<Map<String,Object>> allPastes()
+    public List<Paste> allPastes()
     {
-        return mPasteService.findAllPastes();
+        return mPasteRepo.findAll();
     }
 
     @RequestMapping(value = "/user/create/", method = RequestMethod.POST)
     public String createUser(@RequestParam(value = "user", defaultValue = "none") String aUser,
-                             @RequestParam(value = "pass", defaultValue = "none") String aPass)
-    {
+                             @RequestParam(value = "pass", defaultValue = "none") String aPass) {
         if (aUser.equals("none") || aPass.equals("none")) {
             return "Attach data parameters 'user' and 'pass' to create a new user.";
         }
 
-        if (mUserService.exists(aUser)) {
+        /*
+        if (mUserRepo.exists()) {
             return "Username taken.";
         }
+        */
 
-        mUserService.insert(aUser,aPass);
+        mUserRepo.save(new User(aUser, BCrypt.hashpw(aPass, BCrypt.gensalt())));
         return "User created.";
     }
 }
+
+
+

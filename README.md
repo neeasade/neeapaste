@@ -3,9 +3,7 @@
 
 ~in active development~
 
-~now with spaghetti code~
-
-A pastebin implementation for me to practice Java, Spring, Gradle, JDBC.
+A pastebin implementation for me to practice Java, Spring, Gradle, ~~JDBC~~jpa/hibernate.
 
 ### TODO
 - [x] allow pastes

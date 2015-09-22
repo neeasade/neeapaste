@@ -20,6 +20,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         // Delete the tables(reset)
+        /*
         jdbcTemplate.execute("DROP TABLE pastes IF EXISTS");
         jdbcTemplate.execute("DROP TABLE paste_users IF EXISTS");
         jdbcTemplate.execute("DROP TABLE paste_relates IF EXISTS");
@@ -40,5 +41,6 @@ public class Application implements CommandLineRunner {
                 "paste_id BIGINT NOT NULL, user_id BIGINT NOT NULL," +
                 " CONSTRAINT fk_PerPaste FOREIGN KEY (paste_id) REFERENCES pastes(id)," +
                 " CONSTRAINT fk_PerUser FOREIGN KEY (user_id) REFERENCES paste_users(id))");
+                */
     }
 }

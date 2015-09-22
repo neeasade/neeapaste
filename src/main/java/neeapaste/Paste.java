@@ -1,47 +1,69 @@
 package neeapaste;
 
+import javax.persistence.*;
 import java.rmi.activation.ActivationID;
 
 /**
  * Class to represent a paste.
  */
+@Entity
 public class Paste {
 
-    private long mId;
-    private String mTitle;
-    private String mContent;
-    private long mViews;
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
 
-    public Paste() {
-        mId = -1;
-        mTitle = "";
-        mContent = "";
-        mViews = 0;
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false)
+    private Long views;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User Owner;
+
+
+    // No args for the JPA spec.
+    protected Paste() { }
+
+    public Paste( String title, String content ) {
+        this.title = title;
+        this.content = content;
+        this.views = Long.parseLong("0");
     }
 
-    public Paste(long aId, String aTitle, String aContent, long aViews) {
-        mId = aId;
-        mTitle = aTitle;
-        mContent = aContent;
-        mViews=aViews;
+    public User getOwner()
+    {
+        return Owner;
     }
 
-    // Getters
+    public void setOwner(User aUser)
+    {
+        this.Owner = aUser;
+    }
+
+    public void setViews(Long aValue) {
+        views = aValue;
+    }
 
     public long getViews() {
-        return mViews;
+        return views;
     }
 
-    public long getId() {
-        return mId;
+    public Long getId() {
+        return id;
     }
 
     public String getContent() {
-        return mContent;
+        return content;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
 }
