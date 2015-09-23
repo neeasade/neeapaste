@@ -7,7 +7,7 @@ A pastebin implementation for me to practice Java, Spring, Gradle, ~~JDBC~~jpa/h
 
 ### TODO
 - [x] allow pastes
-- [ ] database persistence
+- [x] database persistence
 - [x] allow users
 - [x] allow pastes to be owned by users
 - [ ] https/SSL

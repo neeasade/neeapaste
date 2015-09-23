@@ -1,19 +1,11 @@
 package neeapaste;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * PasteContoller

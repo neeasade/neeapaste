@@ -2,7 +2,6 @@ package neeapaste;
 
 import java.util.List;
 
-import org.springframework.jdbc.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -11,6 +10,7 @@ import javax.persistence.*;
  * Class to represent a User.
  */
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id

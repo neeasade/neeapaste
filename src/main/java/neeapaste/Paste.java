@@ -1,12 +1,12 @@
 package neeapaste;
 
 import javax.persistence.*;
-import java.rmi.activation.ActivationID;
 
 /**
  * Class to represent a paste.
  */
 @Entity
+@Table(name = "pastes")
 public class Paste {
 
     @Id

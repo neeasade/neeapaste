@@ -10,6 +10,7 @@ import java.util.List;
  * Created by neeasade on 9/22/15.
  */
 public interface PasteRepository extends CrudRepository<Paste,Long> {
+
     List<Paste> findAll();
 
     Paste findOne(Long id);
