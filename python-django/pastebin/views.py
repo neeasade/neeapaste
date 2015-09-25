@@ -6,6 +6,4 @@ def index(request):
     return HttpResponse("Index view placeholder.")
 
 def paste(request):
-     if request.method == 'GET':
-        # Get paste model and return tostring
-        return Paste.objects.all()
+    return Paste.objects.all()

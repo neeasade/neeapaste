@@ -10,6 +10,6 @@ class Paste(models.Model):
     content = models.CharField(max_length=65535)
     title = models.CharField(max_length=30)
     views = models.IntegerField(default=0)
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, null=True)
     def __str__(self):
         return "[" + self.title + "] " + self.content
