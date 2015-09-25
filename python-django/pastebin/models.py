@@ -13,4 +13,3 @@ class Paste(models.Model):
     owner = models.ForeignKey(User)
     def __str__(self):
         return "[" + self.title + "] " + self.content
-
