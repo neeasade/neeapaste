@@ -32,8 +32,8 @@ A **User** here has the following properties: Id, username, password(hashed when
 GET		| result |	status
 --------|--------|---
 /paste/all	| all pastes and info in json format | yes
-/paste/$id	| paste and information in json format | no
-/paste/$id/$property | paste property value | no
+/paste/$id	| paste and information in json format | yes
+/paste/$id/$property | paste property value | yes
 /search?q=$text	| return all pastes in with matching $text in title or content in json format. | no
 /user/$user/ | pastes own by a $user. | no
 
@@ -47,4 +47,4 @@ POST | params | status
 ^            | pass |
 
 ### Database layout
-/placeholder/
+refer to models.py in the pastebin folder.
