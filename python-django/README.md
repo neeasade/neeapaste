@@ -6,8 +6,8 @@
 A pastebin implementation for me to practice python, django, and an orm.
 
 ### TODO
-- [ ] allow pastes
-- [ ] database persistence
+- [x] allow pastes
+- [x] database persistence
 - [ ] allow users
 - [ ] allow pastes to be owned by users
 - [ ] https/SSL
@@ -31,7 +31,7 @@ A **User** here has the following properties: Id, username, password(hashed when
 ### API
 GET		| result |	status
 --------|--------|---
-/paste/all	| all pastes and info in json format | no
+/paste/all	| all pastes and info in json format | yes
 /paste/$id	| paste and information in json format | no
 /paste/$id/$property | paste property value | no
 /search?q=$text	| return all pastes in with matching $text in title or content in json format. | no

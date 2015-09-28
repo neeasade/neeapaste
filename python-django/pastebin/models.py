@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 # Create your models here.
 
@@ -12,4 +13,6 @@ class Paste(models.Model):
     views = models.IntegerField(default=0)
     owner = models.ForeignKey(User, null=True)
     def __str__(self):
-        return "[" + self.title + "] " + self.content
+        return json.dumps({"title" : self.title, "content" : self.content})
+    def data(self):
+        return {"title" : self.title, "content" : self.content, "views" : self.views}
