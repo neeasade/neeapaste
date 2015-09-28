@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from pastebin.models import Paste, User
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 
 def index(request):
     return HttpResponse("Index view placeholder.")
@@ -28,7 +28,7 @@ def createPaste(request):
     if request.method == 'GET':
         return HttpResponse("This address is meant for POST requests.\n")
 
-    lUser = request.POST.get('user')
+    lUsername = request.POST.get('username')
     lPassword = request.POST.get('password')
     lTitle = request.POST.get('title')
     lContent = request.POST.get('content')
@@ -37,11 +37,15 @@ def createPaste(request):
 
     p = Paste(content = lContent, title = lTitle)
 
-    if lUser != None and lPassword != None:
-        lUser = User.objects.filter(username=lUsername)[0]
-        if lUser != Null:
-            if check_password(lUser.password, lPassword):
-                p.owner = lUser.id
+    if lUsername != None and lPassword != None:
+        if User.objects.filter(username=lUsername).count() != 0:
+            lUser = User.objects.filter(username = lUsername)[0]
+            if check_password(lPassword, lUser.password):
+                p.owner = lUser
+            else:
+                return HttpResponse("Authentification failed:")
+        else:
+            return HttpResponse("User does not exist.")
 
     p.save()
     return HttpResponse("http://localhost:8000/paste/" + str(p.id) + "\n")
@@ -66,4 +70,13 @@ def createUser(request):
 def searchPastes(request):
         return HttpResponse("stub.")
 
+@csrf_exempt
+def ownedPastes(request, aUsername):
+    if (aUsername == "create"):
+        return createUser(request)
 
+    lPastes=[]
+    lUser=User.objects.filter(username=aUsername)[0]
+    for paste in Paste.objects.filter(owner=lUser):
+        lPastes.append(paste.data())
+    return HttpResponse(json.dumps(lPastes))
