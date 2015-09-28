@@ -8,12 +8,12 @@ A pastebin implementation for me to practice python, django, and an orm.
 ### TODO
 - [x] allow pastes
 - [x] database persistence
-- [ ] allow users
-- [ ] allow pastes to be owned by users
+- [x] allow users
+- [x] allow pastes to be owned by users
 - [ ] https/SSL
 - [ ] continuous integration
 - [ ] testing/code coverage
-- [ ] store passwords in not plain text
+- [x] store passwords in not plain text
 
 Reference API below for status there.
 
@@ -39,11 +39,11 @@ GET		| result |	status
 
 POST | params | status
 ------------------------|----------|----
-/paste | title(default 'Untitled')(optional) | no
+/paste | title(default 'Untitled')(optional) | yes
 ^      | content(required) |
 ^      | user(optional) |
 ^      | pass(optional, paired with user) |
-/user/create | user | no
+/user/create | user | yes
 ^            | pass |
 
 ### Database layout
