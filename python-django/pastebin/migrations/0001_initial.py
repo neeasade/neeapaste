@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Paste',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('content', models.CharField(max_length=65535)),
                 ('title', models.CharField(max_length=30)),
                 ('views', models.IntegerField(default=0)),
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('username', models.CharField(max_length=40)),
                 ('password', models.CharField(max_length=40)),
             ],
@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='paste',
             name='owner',
-            field=models.ForeignKey(null=True, to='pastebin.User'),
+            field=models.ForeignKey(to='pastebin.User', null=True),
         ),
     ]
